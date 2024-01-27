@@ -1,9 +1,9 @@
 import dynamic from 'next/dynamic';
 import { styled } from '@mui/material/styles';
 
-const ApexChart = dynamic(() => import('react-apexcharts'), {
+const ApexChart = dynamic((e) => import('react-apexcharts'), {
   ssr: false,
-  loading: () => null
+  loading: (e) => null
 });
 
 export const Chart = styled(ApexChart)``;

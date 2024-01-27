@@ -1,5 +1,8 @@
-import { createContext, useContext, useEffect, useReducer, useRef } from 'react';
+import { createContext, useContext, useEffect, useReducer, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import { SDK } from 'src/api';
+import { useRouter } from 'next/navigation';
+var ls = require('local-storage');
 
 const HANDLERS = {
   INITIALIZE: 'INITIALIZE',
@@ -62,7 +65,9 @@ export const AuthContext = createContext({ undefined });
 export const AuthProvider = (props) => {
   const { children } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [apiKey, setApiKey] = useState("");
   const initialized = useRef(false);
+  const router = useRouter();
 
   const initialize = async () => {
     // Prevent from calling twice in development mode with React.StrictMode enabled
@@ -84,7 +89,7 @@ export const AuthProvider = (props) => {
       const user = {
         id: '5e86809283e28b96d2d38537',
         avatar: '/assets/avatars/avatar-anika-visser.png',
-        name: 'Anika Visser',
+        name: 'Sasindu Visser',
         email: 'anika.visser@devias.io'
       };
 
@@ -105,6 +110,15 @@ export const AuthProvider = (props) => {
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
+  );
+
+  useEffect(
+    () => {
+      sessionStorage.setItem('apiKey', apiKey);
+      ls.set('apiKey', apiKey);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [apiKey]
   );
 
   const skip = () => {
@@ -128,15 +142,34 @@ export const AuthProvider = (props) => {
   };
 
   const signIn = async (email, password) => {
-    if (email !== 'demo@devias.io' || password !== 'Password123!') {
-      throw new Error('Please check your email and password');
-    }
 
-    try {
-      window.sessionStorage.setItem('authenticated', 'true');
-    } catch (err) {
-      console.error(err);
-    }
+    SDK.AuthType.login({
+      "username": email,
+      "email": "",
+      "password": password
+    }).then(res => {
+      console.log(res)
+      if(res.status == 200){
+        setApiKey(res?.data?.key)
+        sessionStorage.setItem('authenticated', 'true');
+        router.push('/');
+      }else {
+        // if (email !== 'Admin1@landmark' || password !== 'Admin1@landmark') {
+        //   throw new Error('Please check your email and password');
+        // }
+      }
+    }).catch(err => {
+      console.log(err)
+    })
+
+
+    
+
+    // try {
+    //   window.sessionStorage.setItem('authenticated', 'true');
+    // } catch (err) {
+    //   console.error(err);
+    // }
 
     const user = {
       id: '5e86809283e28b96d2d38537',

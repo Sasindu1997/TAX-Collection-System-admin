@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import { Scrollbar } from 'src/components/scrollbar';
 import { getInitials } from 'src/utils/get-initials';
+import { Button, Container, SvgIcon } from '@mui/material';
 
 export const CustomersTable = (props) => {
   const {
@@ -29,7 +30,16 @@ export const CustomersTable = (props) => {
     onSelectOne,
     page = 0,
     rowsPerPage = 0,
-    selected = []
+    selected = [],
+    data,
+    openView,
+    setOpenView,
+    openUpdate,
+    setOpenUpdate,
+    openDelete,
+    setOpenDelete,
+    cusId,
+    setCusId
   } = props;
 
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
@@ -42,7 +52,7 @@ export const CustomersTable = (props) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox">
+                {/* <TableCell padding="checkbox">
                   <Checkbox
                     checked={selectedAll}
                     indeterminate={selectedSome}
@@ -54,28 +64,40 @@ export const CustomersTable = (props) => {
                       }
                     }}
                   />
+                </TableCell> */}
+                  <TableCell>
+                Id
                 </TableCell>
                 <TableCell>
-                  Name
+                First Name
                 </TableCell>
                 <TableCell>
-                  Email
+                Last Name
                 </TableCell>
                 <TableCell>
-                  Location
+                NIC 
                 </TableCell>
                 <TableCell>
                   Phone
                 </TableCell>
                 <TableCell>
-                  Signed Up
+                Shop Name
+                </TableCell>
+                <TableCell>
+                Address
+                </TableCell>
+                <TableCell>
+                Route
+                </TableCell>
+                <TableCell sx={{ alignItems : 'center', justifyContent : 'center', display: 'flex'}}>
+                <div>Actions</div>
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((customer) => {
-                const isSelected = selected.includes(customer.id);
-                const createdAt = format(customer.createdAt, 'dd/MM/yyyy');
+              {data?.map((customer) => {
+                console.log(customer)
+                const isSelected = selected.includes(customer?.id);
 
                 return (
                   <TableRow
@@ -83,7 +105,7 @@ export const CustomersTable = (props) => {
                     key={customer.id}
                     selected={isSelected}
                   >
-                    <TableCell padding="checkbox">
+                    {/* <TableCell padding="checkbox">
                       <Checkbox
                         checked={isSelected}
                         onChange={(event) => {
@@ -94,33 +116,95 @@ export const CustomersTable = (props) => {
                           }
                         }}
                       />
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell>
                       <Stack
                         alignItems="center"
                         direction="row"
-                        spacing={2}
+                        spacing={0}
                       >
-                        <Avatar src={customer.avatar}>
+                        {/* <Avatar src={customer.avatar}>
                           {getInitials(customer.name)}
-                        </Avatar>
+                        </Avatar> */}
                         <Typography variant="subtitle2">
-                          {customer.name}
+                          {customer.id} 
                         </Typography>
                       </Stack>
                     </TableCell>
                     <TableCell>
-                      {customer.email}
+                      {customer.first_name}
                     </TableCell>
                     <TableCell>
-                      {customer.address.city}, {customer.address.state}, {customer.address.country}
+                      {customer.last_name}
                     </TableCell>
                     <TableCell>
-                      {customer.phone}
+                      {customer.nic}
                     </TableCell>
                     <TableCell>
-                      {createdAt}
+                      {customer.phone_number}
                     </TableCell>
+                    <TableCell>
+                      {customer.shop_name}
+                    </TableCell>
+                    <TableCell>
+                      {customer.address}
+                    </TableCell>
+                    <TableCell >
+                      {customer.route}
+                    </TableCell>
+                    <TableCell  spacing={2}>
+                    <Stack
+                        alignItems="center"
+                        direction="row"
+                        spacing={0}
+                      >
+                        {/* <Avatar src={customer.avatar}>
+                          {getInitials(customer.name)}
+                        </Avatar> */}
+                        <Button
+                          // startIcon={(
+                          //   <SvgIcon fontSize="small">
+                          //     <PlusIcon />
+                          //   </SvgIcon>
+                          // )}
+                          variant="text"
+                          onClick={() => {
+                            setCusId(customer?.id)
+                            setOpenView(true)
+                          }}
+                        >
+                          View
+                        </Button>
+                        <Button
+                          // startIcon={(
+                          //   <SvgIcon fontSize="small">
+                          //     <PlusIcon />
+                          //   </SvgIcon>
+                          // )}
+                          variant="text"
+                          onClick={() => {
+                            setCusId(customer?.id)
+                            setOpenUpdate(true)
+                          }}
+                        >
+                          Update
+                        </Button>
+                        <Button
+                          // startIcon={(
+                          //   <SvgIcon fontSize="small">
+                          //     <PlusIcon />
+                          //   </SvgIcon>
+                          // )}
+                          variant="text"
+                          onClick={() => {
+                            setCusId(customer?.id)
+                            setOpenDelete(true)
+                          }}
+                        >
+                          Delete
+                        </Button>              
+                        </Stack>        
+                      </TableCell>
                   </TableRow>
                 );
               })}

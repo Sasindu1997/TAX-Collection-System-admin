@@ -34,7 +34,7 @@ export const AccountProfileDetails = () => {
   const [values, setValues] = useState({
     firstName: 'Anika',
     lastName: 'Visser',
-    email: 'demo@devias.io',
+    email: 'Admin1@landmark',
     phone: '',
     state: 'los-angeles',
     country: 'USA'
