@@ -43,7 +43,7 @@ const now = new Date();
 const useCustomers = (page, rowsPerPage) => {
   return useMemo(
     () => {
-      return applyPagination(data, page, rowsPerPage);
+      // return applyPagination(data, page, rowsPerPage);
     },
     [page, rowsPerPage]
   );
@@ -52,7 +52,7 @@ const useCustomers = (page, rowsPerPage) => {
 const useCustomerIds = (customers) => {
   return useMemo(
     () => {
-      return customers.map((customer) => customer.id);
+      // return customers.map((customer) => customer.id);
     },
     [customers]
   );
@@ -373,7 +373,7 @@ const Page = () => {
                 </Stack>
             <CustomersSearch />
             <CustomersTable
-              count={data.length}
+              // count={data?.length}
               items={customers}
               onDeselectAll={customersSelection.handleDeselectAll}
               onDeselectOne={customersSelection.handleDeselectOne}
