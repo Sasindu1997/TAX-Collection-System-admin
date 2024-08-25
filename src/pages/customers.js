@@ -1,4 +1,5 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
+import * as React from 'react';
 import Head from 'next/head';
 import { subDays, subHours } from 'date-fns';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
@@ -10,6 +11,23 @@ import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { CustomersTable } from 'src/sections/customer/customers-table';
 import { CustomersSearch } from 'src/sections/customer/customers-search';
 import { applyPagination } from 'src/utils/apply-pagination';
+import { useForm } from "react-hook-form";
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import moment from 'moment';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import {SDK} from '../api/index'
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const now = new Date();
 
@@ -180,6 +198,117 @@ const Page = () => {
   const customers = useCustomers(page, rowsPerPage);
   const customersIds = useCustomerIds(customers);
   const customersSelection = useSelection(customersIds);
+  const [users, setUsers] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [openView, setOpenView] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [cusId, setCusId] = useState('');
+  const [openSnack, setOpenSnack] = React.useState(false);
+  const [snackSeverity, setSnackSeverity] = React.useState(false);
+  const [message, setMessage] = React.useState(false);
+  const [state, setState] = React.useState({
+    opens: false,
+    vertical: 'bottom',
+    horizontal: 'right',
+  });
+  const { vertical, horizontal, opens } = state;
+  const [customerData, setCustomerData] = useState('');
+  const [openBackDrop, setOpenBackDrop] = React.useState(false);
+  const { register, handleSubmit, errors, reset } = useForm({
+    defaultValues: {
+        id: '',
+        firstName: '',
+        lastName: '',
+        nic: '',
+        address: '',
+        shopName: '',
+        phoneNumber: '',
+        route: ''
+    },
+  });
+
+  useEffect(() => {
+    setOpenBackDrop(true)
+    SDK.CustomerType.getAll()
+    .then((res) => {
+      console.log("RES: ", res);
+      setUsers(res?.data);
+      setOpenBackDrop(false)
+    })
+    .catch((error) => {
+      console.log("Error: ", error)
+      setSnackSeverity('error');
+      setMessage('Error!');
+      setOpenSnack(true);
+      setOpenBackDrop(false)
+    })
+  }, [open, openUpdate, openDelete])
+
+  const handleCloseSnack = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenSnack(false);
+  };
+
+  useEffect(() => {
+    console.log("cusId: ", cusId);
+    setOpenBackDrop(true)
+    cusId && SDK.CustomerType.getById(cusId)
+    .then((res) => {
+      console.log("RES: ", res);
+      setCustomerData(res?.data);
+      reset(res?.data);
+      setOpenBackDrop(false)
+    })
+    .catch((error) => {
+      console.log("Error: ", error);
+      setOpenBackDrop(false);
+      setSnackSeverity('error');
+      setMessage('Error!');
+      setOpenSnack(true);
+    })
+  }, [openView === true, openUpdate === true, cusId])
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleCloseView = () => {
+    setOpenView(false);
+  };
+
+  const handleCloseUpdate = () => {
+    setOpenUpdate(false);
+  };
+
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+  };
+
+  const handleDelete = () => {
+    cusId && SDK.CustomerType.deletebyId(cusId)
+    .then((res) => {
+      console.log("RES: ", res);
+      setOpenDelete(false);
+      setSnackSeverity('success');
+      setMessage('Record Deleted Sucessfully!');
+      setOpenSnack(true);
+    })
+    .catch((error) => {
+      console.log("Error: ", error);
+      setOpenDelete(false);
+      setSnackSeverity('error');
+      setMessage('Error In Record Deletion!');
+      setOpenSnack(true);
+    })
+  };
 
   const handlePageChange = useCallback(
     (event, value) => {
@@ -188,12 +317,81 @@ const Page = () => {
     []
   );
 
+  const handleAddNew = () => {
+    setOpen(true);
+  };
+
+  const handleView = () => {
+    setOpenView(true);
+  };
+
   const handleRowsPerPageChange = useCallback(
     (event) => {
       setRowsPerPage(event.target.value);
     },
     []
   );
+
+  const handleSubmitCreate = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const obj = {
+      firstName:  data.get('firstName'),
+      lastName: data.get('lastName'),
+      nic: data.get('nic'),
+      address: data.get('address'),
+      shopName: data.get('shopName'),
+      phoneNumber: data.get('phoneNumber'),
+      route: data.get('route')
+    }
+      console.log(obj);
+      
+    SDK.CustomerType.add(obj)
+    .then((res) => {
+      console.log("RES: ", res);
+      setOpen(false);
+      setSnackSeverity('success');
+      setMessage('Record Created Sucessfully!');
+      setOpenSnack(true);
+    })
+    .catch((error) => {
+      console.log("Error: ", error);
+      setOpen(false);
+      setSnackSeverity('error');
+      setMessage('Error In Record Creation!');
+      setOpenSnack(true);
+    })
+  };
+
+  const handleSubmitUpdate = (values) => {
+    console.log(values)
+    const obj = {
+      firstName: values.firstName,
+      lastName:  values.lastName,
+      nic:  values.nic,
+      address: values.address,
+      shopName: values.shopName,
+      phoneNumber: values.phoneNumber,
+      route: values.route,
+    }
+    console.log(obj);
+    
+    cusId && SDK.CustomerType.updatePatch(cusId, obj)
+    .then((res) => {
+      console.log("RES: ", res);
+      setOpenUpdate(false);
+      setSnackSeverity('success');
+      setMessage('Record Updated Sucessfully!');
+      setOpenSnack(true);
+    })
+    .catch((error) => {
+      console.log("Error: ", error);
+      setOpenUpdate(false);
+      setSnackSeverity('error');
+      setMessage('Error In Record Update!');
+      setOpenSnack(true);
+    })
+  };
 
   return (
     <>
@@ -255,6 +453,7 @@ const Page = () => {
                     </SvgIcon>
                   )}
                   variant="contained"
+                  onClick={handleAddNew}
                 >
                   Add
                 </Button>
@@ -273,8 +472,299 @@ const Page = () => {
               page={page}
               rowsPerPage={rowsPerPage}
               selected={customersSelection.selected}
+              data={users?.length > 0 ? users : []}
+              openView={openView}
+              setOpenView={setOpenView}
+              openUpdate={openUpdate}
+              setOpenUpdate={setOpenUpdate}
+              openDelete={openDelete}
+              setOpenDelete={setOpenDelete}
+              setCusId={setCusId}
+              cusId={cusId}
             />
           </Stack>
+          <Snackbar anchorOrigin={{ vertical, horizontal }} open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack}>
+            <Alert onClose={handleCloseSnack} severity={snackSeverity} sx={{ width: '100%' }}>
+              {message}
+            </Alert>
+          </Snackbar>
+          <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={openBackDrop}
+            // onClick={handleCloseBackDrop}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+          <div>
+            <Dialog open={open} onClose={handleClose}>
+              <DialogTitle>Add New Customer</DialogTitle>
+              <Box component="form" onSubmit={handleSubmitCreate} noValidate sx={{ mt: 1 }}>
+              <DialogContent>
+                {/* <DialogContentText>
+                  To subscribe to this website, please enter your email address here. We
+                  will send updates occasionally.
+                </DialogContentText> */}
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  name="firstName"
+                  id="firstName"
+                  label="First Name"
+                  fullWidth
+                  variant="standard"
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  name="lastName"
+                  id="lastName"
+                  label="Last Name"
+                  fullWidth
+                  variant="standard"
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  name="nic"
+                  id="nic"
+                  label="NIC"
+                  fullWidth
+                  variant="standard"
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  name="phoneNumber"
+                  id="phoneNumber"
+                  label="phoneNumber"
+                  fullWidth
+                  type='number'
+                  variant="standard"
+                />  
+                 <TextField
+                  autoFocus
+                  margin="dense"
+                  name="shopName"
+                  id="shopName"
+                  label="Shop Name"
+                  fullWidth
+                  variant="standard"
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  name="address"
+                  id="address"
+                  label="Address"
+                  fullWidth
+                  variant="standard"
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  name="route"
+                  id="route"
+                  label="Route"
+                  fullWidth
+                  variant="standard"
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => handleClose()}>Cancel</Button>
+                <Button type={'submit'} onSubmit={handleSubmitCreate}>Save</Button>
+              </DialogActions>
+              </Box>
+            </Dialog>
+          </div>
+          <div>
+            <Dialog open={openUpdate} onClose={handleCloseUpdate}>
+              <DialogTitle>Update Customer</DialogTitle>
+              <Box component="form" onSubmit={handleSubmit(handleSubmitUpdate)} noValidate sx={{ mt: 1 }}>
+              <DialogContent>
+                {/* <DialogContentText>
+                  To subscribe to this website, please enter your email address here. We
+                  will send updates occasionally.
+                </DialogContentText> */}
+                <TextField
+                  {...register("firstName")}
+                  autoFocus
+                  margin="dense"
+                  name="firstName"
+                  id="firstName"
+                  label="First Name"
+                  fullWidth
+                  variant="standard"
+                />
+                <TextField
+                  {...register("lastName")}
+                  autoFocus
+                  margin="dense"
+                  name="lastName"
+                  id="lastName"
+                  label="Last Name"
+                  fullWidth
+                  variant="standard"
+                />
+                <TextField
+                  {...register("nic")}
+                  autoFocus
+                  margin="dense"
+                  name="nic"
+                  id="nic"
+                  label="NIC"
+                  fullWidth
+                  variant="standard"
+                />
+                <TextField
+                  {...register("phoneNumber")}
+                  autoFocus
+                  margin="dense"
+                  name="phoneNumber"
+                  id="phoneNumber"
+                  label="phoneNumber"
+                  fullWidth
+                  variant="standard"
+                />  
+                 <TextField
+                 {...register("shopName")}
+                  autoFocus
+                  margin="dense"
+                  name="shopName"
+                  id="shopName"
+                  label="Shop Name"
+                  fullWidth
+                  variant="standard"
+                />
+                <TextField
+                  {...register("address")}
+                  autoFocus
+                  margin="dense"
+                  name="address"
+                  id="address"
+                  label="Address"
+                  fullWidth
+                  variant="standard"
+                />
+                <TextField
+                  {...register("route")}
+                  autoFocus
+                  margin="dense"
+                  name="route"
+                  id="route"
+                  label="Route"
+                  fullWidth
+                  variant="standard"
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => handleCloseUpdate()}>Cancel</Button>
+                <Button type={'submit'} onSubmit={handleSubmit(handleSubmitUpdate)}>Save</Button>
+              </DialogActions>
+              </Box>
+            </Dialog>
+          </div>
+          <div>
+            <Dialog open={openView} onClose={handleCloseView}>
+              <DialogTitle>View Customer</DialogTitle>
+              <Box component="form" noValidate sx={{ mt: 1 }} width={'500px'}>
+              <DialogContent>
+                {/* <DialogContentText>
+                  To subscribe to this website, please enter your email address here. We
+                  will send updates occasionally.
+                </DialogContentText> */}
+
+                <Typography variant="h6" fullWidth sx={{ mb: 1 }}>
+                  Customer Id
+                </Typography>
+                <Typography variant="h7" fullWidth px={'5px'} sx={{ mt: 2 }}>
+                  {customerData?.cid || '-'}
+                </Typography>
+
+                <Typography variant="h6" fullWidth pt={'5px'} sx={{ mt: 2, mb: 1 }}>
+                Customer First Name
+                </Typography>
+                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
+                  {customerData?.firstName || '-'}
+                </Typography>
+
+                <Typography variant="h6" fullWidth py={'5px'} sx={{ mt: 2, mb: 1 }}>
+                Customer Last Name
+                </Typography>
+                <Typography variant="p" fullWidth px={'5px'} py={'5px'} sx={{ mt: 2 }}>
+                  {customerData?.lastName || '-'}
+                </Typography>
+
+                <Typography variant="h6" fullWidth py={'5px'} sx={{ mt: 2, mb: 1 }}>
+                Customer NIC
+                </Typography>
+                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
+                  {customerData?.nic || '-'}
+                </Typography>
+
+                <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
+                Customer Phone Number
+                </Typography>
+                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
+                  {customerData?.phoneNumber || '-'}
+                </Typography>
+
+                <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
+                Customer Address
+                </Typography>
+                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
+                  {customerData?.address || '-'}
+                </Typography>
+
+                <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
+                Shop Name
+                </Typography>
+                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
+                  {customerData?.shopName || '-'}
+                </Typography>
+
+                <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
+                Route
+                </Typography>
+                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
+                  {customerData?.route || '-'}
+                </Typography>
+
+                <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
+                Created Date
+                </Typography>
+                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
+                  {moment(customerData?.created).format('DD-MM-YYYY') || '-'}
+                </Typography>
+
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseView}>Close</Button>
+              </DialogActions>
+              </Box>
+            </Dialog>
+          </div>
+          <div>
+            <Dialog open={openDelete} onClose={handleCloseDelete}>
+              <DialogTitle>Delete Customer</DialogTitle>
+              <Box component="form" noValidate sx={{ mt: 1 }} width={'500px'}>
+              <DialogContent>
+                {/* <DialogContentText>
+                  To subscribe to this website, please enter your email address here. We
+                  will send updates occasionally.
+                </DialogContentText> */}
+
+                <Typography variant="h8" fullWidth sx={{ mb: 1 }}>
+                  Are You Sure You Want To Delete This Record? 
+                </Typography>
+
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseDelete}>Close</Button>
+                <Button onClick={handleDelete}>Confirm</Button>
+              </DialogActions>
+              </Box>
+            </Dialog>
+          </div>
         </Container>
       </Box>
     </>

@@ -27,7 +27,7 @@ const Page = () => (
         py: 8
       }}
     >
-      <Container maxWidth="xl">
+      {/* <Container maxWidth="xl">
         <Grid
           container
           spacing={3}
@@ -89,6 +89,10 @@ const Page = () => (
                 {
                   name: 'Last year',
                   data: [12, 11, 4, 6, 2, 9, 9, 10, 11, 12, 13, 13]
+                },
+                 {
+                  name: 'Last year',
+                  data: [12, 11, 4, 6, 2, 9, 9, 10, 11, 12, 13, 13]
                 }
               ]}
               sx={{ height: '100%' }}
@@ -105,7 +109,7 @@ const Page = () => (
               sx={{ height: '100%' }}
             />
           </Grid>
-          <Grid
+       <Grid
             xs={12}
             md={6}
             lg={4}
@@ -218,7 +222,7 @@ const Page = () => (
             />
           </Grid>
         </Grid>
-      </Container>
+      </Container> */}
     </Box>
   </>
 );
