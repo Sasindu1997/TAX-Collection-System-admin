@@ -2,7 +2,7 @@ import axios from "axios";
 import { BASE_URL } from '../../config.env'
 var ls = require('local-storage');
 
-const extendedUrl = `${BASE_URL}/api/v1`;
+const extendedUrl = `${BASE_URL}/api`;
 
 // let token = ls.get('apiKey');
 let token = "5b2bba40ef2844949a3dbe98d14c43c7ee04faed"
@@ -14,7 +14,7 @@ const apiHeaders = {
 
 const add = async(req) => {
     console.log(req);
-    const data =  axios.post(extendedUrl + "/clients/", req, {
+    const data =  axios.post(extendedUrl + "/user/", req, {
         headers: apiHeaders
       }
     );
@@ -23,7 +23,7 @@ const add = async(req) => {
 };
 
 const getAll = async() => {
-    const data = await axios.get(extendedUrl + "/clients/?page=1", {
+    const data = await axios.get(extendedUrl + "/user", {
         headers: apiHeaders
     });
     console.log("getall", data);
@@ -31,7 +31,7 @@ const getAll = async() => {
 };
 
 const getById = async(id) => {
-    const data = await axios.get(extendedUrl + `/clients/${id}/`, {
+    const data = await axios.get(extendedUrl + `/user/${id}/`, {
         headers: apiHeaders
     });
     console.log(data);
@@ -39,7 +39,7 @@ const getById = async(id) => {
 };
 
 const update = async(id, req) => {
-    const data = await axios.put(extendedUrl + `/clients/${id}/`, req, {
+    const data = await axios.put(extendedUrl + `/user/${id}/`, req, {
         headers: apiHeaders,
     });
     console.log(data);
@@ -47,7 +47,7 @@ const update = async(id, req) => {
 };
 
 const updatePatch = async(id, req) => {
-    const data = await axios.patch(extendedUrl + `/clients/${id}/`,  req,{
+    const data = await axios.patch(extendedUrl + `/user/${id}/`,  req,{
         headers: apiHeaders,
     });
     console.log(data);
@@ -55,7 +55,7 @@ const updatePatch = async(id, req) => {
 };
 
 const deletebyId = async(id) => {
-    const data = await axios.delete(extendedUrl + `/clients/${id}/`, {
+    const data = await axios.delete(extendedUrl + `/user/${id}/`, {
         headers: apiHeaders
     });
     console.log(data);

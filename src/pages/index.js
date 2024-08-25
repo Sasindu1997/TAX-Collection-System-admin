@@ -27,7 +27,7 @@ const Page = () => (
         py: 8
       }}
     >
-      <Container maxWidth="xl">
+      {/* <Container maxWidth="xl">
         <Grid
           container
           spacing={3}
@@ -109,7 +109,7 @@ const Page = () => (
               sx={{ height: '100%' }}
             />
           </Grid>
-        {/* <Grid
+       <Grid
             xs={12}
             md={6}
             lg={4}
@@ -220,9 +220,9 @@ const Page = () => (
               ]}
               sx={{ height: '100%' }}
             />
-          </Grid> */}
+          </Grid>
         </Grid>
-      </Container>
+      </Container> */}
     </Box>
   </>
 );

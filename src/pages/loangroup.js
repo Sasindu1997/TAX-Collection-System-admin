@@ -202,7 +202,16 @@ const Page = () => {
   const customersIds = useCustomerIds(customers);
   const customersSelection = useSelection(customersIds);
   const [users, setUsers] = useState([]);
-  const [investors, setInvestors] = useState([]);
+  const [investors, setInvestors] = useState([
+    {
+      id: '5e8680e60cba5019c5ca6fda',
+      name: 'Nasimiyu Danai',
+    },
+    {
+      id: '5e887a1fbefd7938eea9c981',
+      name: 'Miron Vitold',
+    }
+  ]);
   const [open, setOpen] = useState(false);
   const [openView, setOpenView] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
@@ -243,7 +252,7 @@ const Page = () => {
     SDK.LoanGroupType.getAll()
     .then((res) => {
       console.log("RES: ", res);
-      setUsers(res?.data?.results);
+      setUsers(res?.data);
       setOpenBackDrop(false)
     })
     .catch((error) => {
@@ -254,19 +263,19 @@ const Page = () => {
       setOpenBackDrop(false)
     })
 
-    SDK.InvestorType.getAll()
-    .then((res) => {
-      console.log("RES: ", res);
-      setInvestors(res?.data?.results);
-      setOpenBackDrop(false)
-    })
-    .catch((error) => {
-      console.log("Error: ", error)
-      setSnackSeverity('error');
-      setMessage('Error!');
-      setOpenSnack(true);
-      setOpenBackDrop(false)
-    })
+    // SDK.InvestorType.getAll()
+    // .then((res) => {
+    //   console.log("RES: ", res);
+    //   setInvestors(res?.data?.results);
+    //   setOpenBackDrop(false)
+    // })
+    // .catch((error) => {
+    //   console.log("Error: ", error)
+    //   setSnackSeverity('error');
+    //   setMessage('Error!');
+    //   setOpenSnack(true);
+    //   setOpenBackDrop(false)
+    // })
   }, [open, openUpdate, openDelete])
 
   const handleCloseSnack = (event, reason) => {
@@ -364,7 +373,7 @@ const Page = () => {
     const data = new FormData(event.currentTarget);
     const obj = {
       name: data.get('name'),
-      investors: investorss
+      // investors: investorss
     }
       console.log(obj);
       
@@ -388,17 +397,11 @@ const Page = () => {
   const handleSubmitUpdate = (values) => {
     console.log(values)
     const obj = {
-      first_name: values.first_name,
-      last_name:  values.last_name,
-      nic:  values.nic,
-      address: values.address,
-      shop_name: values.shop_name,
-      phone_number: values.phone_number,
-      route: values.route,
+      name: values.name,
     }
     console.log(obj);
     
-    cusId && SDK.LoanGroupType.updatePatch(cusId, obj)
+    cusId && SDK.LoanGroupType.update(cusId, obj)
     .then((res) => {
       console.log("RES: ", res);
       setOpenUpdate(false);
@@ -535,7 +538,7 @@ const Page = () => {
                   fullWidth
                   variant="standard"
                 />  
-                <Typography variant="p" fullWidth sx={{ mb: 1, mt: 3 }}>
+                <Typography variant="p" fullWidth sx={{ mb: 1, mt: 3, fontSize: '12px', color: 'GrayText', fontWeight: '500' }} >
                   Investors
                 </Typography>
                 <Select
@@ -607,8 +610,8 @@ const Page = () => {
             </Dialog>
           </div>
           <div>
-            <Dialog open={openView} onClose={handleCloseView}>
-              <DialogTitle>View Customer</DialogTitle>
+          <Dialog open={openView} onClose={handleCloseView}>
+              <DialogTitle>View Loan Group</DialogTitle>
               <Box component="form" noValidate sx={{ mt: 1 }} width={'500px'}>
               <DialogContent>
                 {/* <DialogContentText>
@@ -617,59 +620,17 @@ const Page = () => {
                 </DialogContentText> */}
 
                 <Typography variant="h6" fullWidth sx={{ mb: 1 }}>
-                  Customer Id
+                Loan Group Id
                 </Typography>
                 <Typography variant="h7" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.id || '-'}
+                  {customerData?.gid || '-'}
                 </Typography>
 
                 <Typography variant="h6" fullWidth pt={'5px'} sx={{ mt: 2, mb: 1 }}>
-                Customer First Name
+                Loan Group Name
                 </Typography>
                 <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.first_name || '-'}
-                </Typography>
-
-                <Typography variant="h6" fullWidth py={'5px'} sx={{ mt: 2, mb: 1 }}>
-                Customer Last Name
-                </Typography>
-                <Typography variant="p" fullWidth px={'5px'} py={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.last_name || '-'}
-                </Typography>
-
-                <Typography variant="h6" fullWidth py={'5px'} sx={{ mt: 2, mb: 1 }}>
-                Customer NIC
-                </Typography>
-                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.nic || '-'}
-                </Typography>
-
-                <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
-                Customer Phone Number
-                </Typography>
-                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.phone_number || '-'}
-                </Typography>
-
-                <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
-                Customer Address
-                </Typography>
-                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.address || '-'}
-                </Typography>
-
-                <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
-                Shop Name
-                </Typography>
-                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.shop_name || '-'}
-                </Typography>
-
-                <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
-                Route
-                </Typography>
-                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.route || '-'}
+                  {customerData?.name || '-'}
                 </Typography>
 
                 <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>

@@ -241,6 +241,8 @@ const Page = () => {
   const customersIds = useCustomerIds(customers);
   const customersSelection = useSelection(customersIds);
   const [users, setUsers] = useState([]);
+  const [clients, setClients] = useState([]);
+  const [group, setGroup] = useState([]);
   const [open, setOpen] = useState(false);
   const [openFiles, setOpenFiles] = useState(false);
   const [openView, setOpenView] = useState(false);
@@ -293,7 +295,35 @@ const Page = () => {
     SDK.LoanType.getAll()
     .then((res) => {
       console.log("RES: ", res);
-      setUsers(res?.data?.results);
+      setUsers(res?.data);
+      setOpenBackDrop(false)
+    })
+    .catch((error) => {
+      console.log("Error: ", error)
+      setSnackSeverity('error');
+      setMessage('Error!');
+      setOpenSnack(true);
+      setOpenBackDrop(false)
+    })
+
+    SDK.CustomerType.getAll()
+    .then((res) => {
+      console.log("RES: ", res);
+      setClients(res?.data);
+      setOpenBackDrop(false)
+    })
+    .catch((error) => {
+      console.log("Error: ", error)
+      setSnackSeverity('error');
+      setMessage('Error!');
+      setOpenSnack(true);
+      setOpenBackDrop(false)
+    })
+
+    SDK.LoanGroupType.getAll()
+    .then((res) => {
+      console.log("RES: ", res);
+      setGroup(res?.data);
       setOpenBackDrop(false)
     })
     .catch((error) => {
@@ -469,13 +499,14 @@ const Page = () => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const obj = {
-      payment_start_date: date,
+      startDate: date,
       payment_period: data.get('payment_period'),
       amount: data.get('amount'),
-      interest_rate: data.get('interest_rate'),
+      interestRate: data.get('interest_rate'),
       status: status,
-      customer: customerId,
-      loan_group: loanGrp,
+      client: customerId,
+      dailyRental: data.get('daily_rental'),
+      group: loanGrp,
       guarantees: [
         guarantees
       ]
@@ -763,8 +794,7 @@ sx={{ mt: 1 }}>
                 </Typography>
                 <div>
                    <DatePicker
-                    renderInput={(inputProps) => <TextField {...inputProps}
-variant="outlined" />}
+                    renderInput={(inputProps) => <TextField {...inputProps} variant="outlined" />}
                     slotProps={{ textField: { variant: 'outlined' } }}
                     onChange={(e) => handleDatePicker(e)}
                     value={date}
@@ -831,8 +861,11 @@ variant="outlined" />}
                   variant="standard"
                   onChange={handleChangeCustomerId}
                 >
-                  <MenuItem value={'1'}>Customer 1</MenuItem>
-                  <MenuItem value={'2'}>Customer 2</MenuItem>
+                  {/* <MenuItem value={'1'}>Customer 1</MenuItem>
+                  <MenuItem value={'2'}>Customer 2</MenuItem> */}
+                  {clients?.map((client) => (
+                    <MenuItem key={client.cid} value={client.cid}>{`${client.firstName} ${client.lastName}`}</MenuItem>
+                  ))}
                 </Select>
                 <Typography variant="h8"
                     fullWidth
@@ -849,7 +882,9 @@ variant="outlined" />}
                   variant="standard"
                   onChange={handleChangeLoangroup}
                 >
-                  <MenuItem value={'4'}>loan_group 4</MenuItem>
+                 {group?.map((group) => (
+                    <MenuItem key={group.gid} value={group.gid}>{group.name}</MenuItem>
+                  ))}
                 </Select>
                 <Typography variant="h8"
                     fullWidth

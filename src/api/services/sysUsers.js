@@ -2,9 +2,8 @@ import axios from "axios";
 import { BASE_URL } from '../../config.env'
 var ls = require('local-storage');
 
-const extendedUrl = `${BASE_URL}/api/v1`;
+const extendedUrl = `${BASE_URL}/api`;
 
-// let token = ls.get('apiKey');
 let token = "5b2bba40ef2844949a3dbe98d14c43c7ee04faed"
 
 const apiHeaders = {
@@ -23,7 +22,7 @@ const add = async(req) => {
 };
 
 const getAll = async() => {
-    const data = await axios.get(extendedUrl + "/user/?page=1", {
+    const data = await axios.get(extendedUrl + "/user/", {
         headers: apiHeaders
     });
     console.log("getall", data);

@@ -127,24 +127,24 @@ export const CustomersTable = (props) => {
                           {getInitials(customer.name)}
                         </Avatar> */}
                         <Typography variant="subtitle2">
-                          {customer.id} 
+                          {customer.cid} 
                         </Typography>
                       </Stack>
                     </TableCell>
                     <TableCell>
-                      {customer.first_name}
+                      {customer.firstName}
                     </TableCell>
                     <TableCell>
-                      {customer.last_name}
+                      {customer.lastName}
                     </TableCell>
                     <TableCell>
                       {customer.nic}
                     </TableCell>
                     <TableCell>
-                      {customer.phone_number}
+                      {customer.phoneNumber}
                     </TableCell>
                     <TableCell>
-                      {customer.shop_name}
+                      {customer.shopName}
                     </TableCell>
                     <TableCell>
                       {customer.address}
@@ -169,7 +169,7 @@ export const CustomersTable = (props) => {
                           // )}
                           variant="text"
                           onClick={() => {
-                            setCusId(customer?.id)
+                            setCusId(customer?.cid)
                             setOpenView(true)
                           }}
                         >
@@ -183,7 +183,7 @@ export const CustomersTable = (props) => {
                           // )}
                           variant="text"
                           onClick={() => {
-                            setCusId(customer?.id)
+                            setCusId(customer?.cid)
                             setOpenUpdate(true)
                           }}
                         >
@@ -197,7 +197,7 @@ export const CustomersTable = (props) => {
                           // )}
                           variant="text"
                           onClick={() => {
-                            setCusId(customer?.id)
+                            setCusId(customer?.cid)
                             setOpenDelete(true)
                           }}
                         >

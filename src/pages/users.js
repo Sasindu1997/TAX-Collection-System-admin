@@ -1,29 +1,30 @@
-import { useCallback, useMemo, useState, useEffect } from 'react';
-import * as React from 'react';
-import Head from 'next/head';
-import { subDays, subHours } from 'date-fns';
-import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
-import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
-import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
-import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/material';
-import { useSelection } from 'src/hooks/use-selection';
-import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { CustomersTable } from 'src/sections/user/customers-table';
-import { CustomersSearch } from 'src/sections/user/customers-search';
-import { applyPagination } from 'src/utils/apply-pagination';
+import { useCallback, useMemo, useState, useEffect } from "react";
+import * as React from "react";
+import Head from "next/head";
+import { subDays, subHours } from "date-fns";
+import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
+import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
+import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
+import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
+import { useSelection } from "src/hooks/use-selection";
+import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
+import { CustomersTable } from "src/sections/user/customers-table";
+import { CustomersSearch } from "src/sections/user/customers-search";
+import { applyPagination } from "src/utils/apply-pagination";
 import { useForm } from "react-hook-form";
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import moment from 'moment';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
-import {SDK} from '../api/index'
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import moment from "moment";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import { SDK } from "../api/index";
+import { type } from "os";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -33,163 +34,157 @@ const now = new Date();
 
 const data = [
   {
-    id: '5e887ac47eed253091be10cb',
+    id: "5e887ac47eed253091be10cb",
     address: {
-      city: 'Cleveland',
-      country: 'USA',
-      state: 'Ohio',
-      street: '2849 Fulton Street'
+      city: "Cleveland",
+      country: "USA",
+      state: "Ohio",
+      street: "2849 Fulton Street",
     },
-    avatar: '/assets/avatars/avatar-carson-darrin.png',
+    avatar: "/assets/avatars/avatar-carson-darrin.png",
     createdAt: subDays(subHours(now, 7), 1).getTime(),
-    email: 'carson.darrin@devias.io',
-    name: 'Carson Darrin',
-    phone: '304-428-3097'
+    email: "carson.darrin@devias.io",
+    name: "Carson Darrin",
+    phone: "304-428-3097",
   },
   {
-    id: '5e887b209c28ac3dd97f6db5',
+    id: "5e887b209c28ac3dd97f6db5",
     address: {
-      city: 'Atlanta',
-      country: 'USA',
-      state: 'Georgia',
-      street: '1865  Pleasant Hill Road'
+      city: "Atlanta",
+      country: "USA",
+      state: "Georgia",
+      street: "1865  Pleasant Hill Road",
     },
-    avatar: '/assets/avatars/avatar-fran-perez.png',
+    avatar: "/assets/avatars/avatar-fran-perez.png",
     createdAt: subDays(subHours(now, 1), 2).getTime(),
-    email: 'fran.perez@devias.io',
-    name: 'Fran Perez',
-    phone: '712-351-5711'
+    email: "fran.perez@devias.io",
+    name: "Fran Perez",
+    phone: "712-351-5711",
   },
   {
-    id: '5e887b7602bdbc4dbb234b27',
+    id: "5e887b7602bdbc4dbb234b27",
     address: {
-      city: 'North Canton',
-      country: 'USA',
-      state: 'Ohio',
-      street: '4894  Lakeland Park Drive'
+      city: "North Canton",
+      country: "USA",
+      state: "Ohio",
+      street: "4894  Lakeland Park Drive",
     },
-    avatar: '/assets/avatars/avatar-jie-yan-song.png',
+    avatar: "/assets/avatars/avatar-jie-yan-song.png",
     createdAt: subDays(subHours(now, 4), 2).getTime(),
-    email: 'jie.yan.song@devias.io',
-    name: 'Jie Yan Song',
-    phone: '770-635-2682'
+    email: "jie.yan.song@devias.io",
+    name: "Jie Yan Song",
+    phone: "770-635-2682",
   },
   {
-    id: '5e86809283e28b96d2d38537',
+    id: "5e86809283e28b96d2d38537",
     address: {
-      city: 'Madrid',
-      country: 'Spain',
-      name: 'Anika Visser',
-      street: '4158  Hedge Street'
+      city: "Madrid",
+      country: "Spain",
+      name: "Anika Visser",
+      street: "4158  Hedge Street",
     },
-    avatar: '/assets/avatars/avatar-anika-visser.png',
+    avatar: "/assets/avatars/avatar-anika-visser.png",
     createdAt: subDays(subHours(now, 11), 2).getTime(),
-    email: 'anika.visser@devias.io',
-    name: 'Anika Visser',
-    phone: '908-691-3242'
+    email: "anika.visser@devias.io",
+    name: "Anika Visser",
+    phone: "908-691-3242",
   },
   {
-    id: '5e86805e2bafd54f66cc95c3',
+    id: "5e86805e2bafd54f66cc95c3",
     address: {
-      city: 'San Diego',
-      country: 'USA',
-      state: 'California',
-      street: '75247'
+      city: "San Diego",
+      country: "USA",
+      state: "California",
+      street: "75247",
     },
-    avatar: '/assets/avatars/avatar-miron-vitold.png',
+    avatar: "/assets/avatars/avatar-miron-vitold.png",
     createdAt: subDays(subHours(now, 7), 3).getTime(),
-    email: 'miron.vitold@devias.io',
-    name: 'Miron Vitold',
-    phone: '972-333-4106'
+    email: "miron.vitold@devias.io",
+    name: "Miron Vitold",
+    phone: "972-333-4106",
   },
   {
-    id: '5e887a1fbefd7938eea9c981',
+    id: "5e887a1fbefd7938eea9c981",
     address: {
-      city: 'Berkeley',
-      country: 'USA',
-      state: 'California',
-      street: '317 Angus Road'
+      city: "Berkeley",
+      country: "USA",
+      state: "California",
+      street: "317 Angus Road",
     },
-    avatar: '/assets/avatars/avatar-penjani-inyene.png',
+    avatar: "/assets/avatars/avatar-penjani-inyene.png",
     createdAt: subDays(subHours(now, 5), 4).getTime(),
-    email: 'penjani.inyene@devias.io',
-    name: 'Penjani Inyene',
-    phone: '858-602-3409'
+    email: "penjani.inyene@devias.io",
+    name: "Penjani Inyene",
+    phone: "858-602-3409",
   },
   {
-    id: '5e887d0b3d090c1b8f162003',
+    id: "5e887d0b3d090c1b8f162003",
     address: {
-      city: 'Carson City',
-      country: 'USA',
-      state: 'Nevada',
-      street: '2188  Armbrester Drive'
+      city: "Carson City",
+      country: "USA",
+      state: "Nevada",
+      street: "2188  Armbrester Drive",
     },
-    avatar: '/assets/avatars/avatar-omar-darboe.png',
+    avatar: "/assets/avatars/avatar-omar-darboe.png",
     createdAt: subDays(subHours(now, 15), 4).getTime(),
-    email: 'omar.darobe@devias.io',
-    name: 'Omar Darobe',
-    phone: '415-907-2647'
+    email: "omar.darobe@devias.io",
+    name: "Omar Darobe",
+    phone: "415-907-2647",
   },
   {
-    id: '5e88792be2d4cfb4bf0971d9',
+    id: "5e88792be2d4cfb4bf0971d9",
     address: {
-      city: 'Los Angeles',
-      country: 'USA',
-      state: 'California',
-      street: '1798  Hickory Ridge Drive'
+      city: "Los Angeles",
+      country: "USA",
+      state: "California",
+      street: "1798  Hickory Ridge Drive",
     },
-    avatar: '/assets/avatars/avatar-siegbert-gottfried.png',
+    avatar: "/assets/avatars/avatar-siegbert-gottfried.png",
     createdAt: subDays(subHours(now, 2), 5).getTime(),
-    email: 'siegbert.gottfried@devias.io',
-    name: 'Siegbert Gottfried',
-    phone: '702-661-1654'
+    email: "siegbert.gottfried@devias.io",
+    name: "Siegbert Gottfried",
+    phone: "702-661-1654",
   },
   {
-    id: '5e8877da9a65442b11551975',
+    id: "5e8877da9a65442b11551975",
     address: {
-      city: 'Murray',
-      country: 'USA',
-      state: 'Utah',
-      street: '3934  Wildrose Lane'
+      city: "Murray",
+      country: "USA",
+      state: "Utah",
+      street: "3934  Wildrose Lane",
     },
-    avatar: '/assets/avatars/avatar-iulia-albu.png',
+    avatar: "/assets/avatars/avatar-iulia-albu.png",
     createdAt: subDays(subHours(now, 8), 6).getTime(),
-    email: 'iulia.albu@devias.io',
-    name: 'Iulia Albu',
-    phone: '313-812-8947'
+    email: "iulia.albu@devias.io",
+    name: "Iulia Albu",
+    phone: "313-812-8947",
   },
   {
-    id: '5e8680e60cba5019c5ca6fda',
+    id: "5e8680e60cba5019c5ca6fda",
     address: {
-      city: 'Salt Lake City',
-      country: 'USA',
-      state: 'Utah',
-      street: '368 Lamberts Branch Road'
+      city: "Salt Lake City",
+      country: "USA",
+      state: "Utah",
+      street: "368 Lamberts Branch Road",
     },
-    avatar: '/assets/avatars/avatar-nasimiyu-danai.png',
+    avatar: "/assets/avatars/avatar-nasimiyu-danai.png",
     createdAt: subDays(subHours(now, 1), 9).getTime(),
-    email: 'nasimiyu.danai@devias.io',
-    name: 'Nasimiyu Danai',
-    phone: '801-301-7894'
-  }
+    email: "nasimiyu.danai@devias.io",
+    name: "Nasimiyu Danai",
+    phone: "801-301-7894",
+  },
 ];
 
 const useCustomers = (page, rowsPerPage) => {
-  return useMemo(
-    () => {
-      return applyPagination(data, page, rowsPerPage);
-    },
-    [page, rowsPerPage]
-  );
+  return useMemo(() => {
+    return applyPagination(data, page, rowsPerPage);
+  }, [page, rowsPerPage]);
 };
 
 const useCustomerIds = (customers) => {
-  return useMemo(
-    () => {
-      return customers.map((customer) => customer.id);
-    },
-    [customers]
-  );
+  return useMemo(() => {
+    return customers.map((customer) => customer.id);
+  }, [customers]);
 };
 
 const Page = () => {
@@ -203,50 +198,48 @@ const Page = () => {
   const [openView, setOpenView] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const [cusId, setCusId] = useState('');
+  const [cusId, setCusId] = useState("");
   const [openSnack, setOpenSnack] = React.useState(false);
   const [snackSeverity, setSnackSeverity] = React.useState(false);
   const [message, setMessage] = React.useState(false);
   const [state, setState] = React.useState({
     opens: false,
-    vertical: 'bottom',
-    horizontal: 'right',
+    vertical: "bottom",
+    horizontal: "right",
   });
   const { vertical, horizontal, opens } = state;
-  const [customerData, setCustomerData] = useState('');
+  const [customerData, setCustomerData] = useState("");
   const [openBackDrop, setOpenBackDrop] = React.useState(false);
   const { register, handleSubmit, errors, reset } = useForm({
     defaultValues: {
-        id: '',
-        first_name: '',
-        last_name: '',
-        nic: '',
-        address: '',
-        shop_name: '',
-        phone_number: '',
-        route: ''
+      id: "",
+      first_name: "",
+      last_name: "",
+      nic: "",
+      address: "",
+      shop_name: "",
+      phone_number: "",
+      route: "",
     },
   });
 
   useEffect(() => {
-    setOpenBackDrop(true)
+    setOpenBackDrop(true);
     SDK.SysUserType.getAll()
-    .then((res) => {
-      console.log("RES: ", res);
-      setUsers(res?.data?.results);
-      setOpenBackDrop(false)
-    })
-    .catch((error) => {
-      console.log("Error: ", error)
-      setSnackSeverity('error');
-      setMessage('Error!');
-      setOpenSnack(true);
-      setOpenBackDrop(false)
-    })
-  }, [open, openUpdate, openDelete])
+      .then((res) => {
+        setUsers(res?.data);
+        setOpenBackDrop(false);
+      })
+      .catch((error) => {
+        setSnackSeverity("error");
+        setMessage("Error!");
+        setOpenSnack(true);
+        setOpenBackDrop(false);
+      });
+  }, [open, openUpdate, openDelete]);
 
   const handleCloseSnack = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
@@ -254,23 +247,21 @@ const Page = () => {
   };
 
   useEffect(() => {
-    console.log("cusId: ", cusId);
-    setOpenBackDrop(true)
-    cusId && SDK.SysUserType.getById(cusId)
-    .then((res) => {
-      console.log("RES: ", res);
-      setCustomerData(res?.data);
-      reset(res?.data);
-      setOpenBackDrop(false)
-    })
-    .catch((error) => {
-      console.log("Error: ", error);
-      setOpenBackDrop(false);
-      setSnackSeverity('error');
-      setMessage('Error!');
-      setOpenSnack(true);
-    })
-  }, [openView === true, openUpdate === true, cusId])
+    setOpenBackDrop(true);
+    cusId &&
+      SDK.SysUserType.getById(cusId)
+        .then((res) => {
+          setCustomerData(res?.data);
+          reset(res?.data);
+          setOpenBackDrop(false);
+        })
+        .catch((error) => {
+          setOpenBackDrop(false);
+          setSnackSeverity("error");
+          setMessage("Error!");
+          setOpenSnack(true);
+        });
+  }, [openView === true, openUpdate === true, cusId]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -293,29 +284,25 @@ const Page = () => {
   };
 
   const handleDelete = () => {
-    cusId && SDK.SysUserType.deletebyId(cusId)
-    .then((res) => {
-      console.log("RES: ", res);
-      setOpenDelete(false);
-      setSnackSeverity('success');
-      setMessage('Record Deleted Sucessfully!');
-      setOpenSnack(true);
-    })
-    .catch((error) => {
-      console.log("Error: ", error);
-      setOpenDelete(false);
-      setSnackSeverity('error');
-      setMessage('Error In Record Deletion!');
-      setOpenSnack(true);
-    })
+    cusId &&
+      SDK.SysUserType.deletebyId(cusId)
+        .then((res) => {
+          setOpenDelete(false);
+          setSnackSeverity("success");
+          setMessage("Record Deleted Sucessfully!");
+          setOpenSnack(true);
+        })
+        .catch((error) => {
+          setOpenDelete(false);
+          setSnackSeverity("error");
+          setMessage("Error In Record Deletion!");
+          setOpenSnack(true);
+        });
   };
 
-  const handlePageChange = useCallback(
-    (event, value) => {
-      setPage(value);
-    },
-    []
-  );
+  const handlePageChange = useCallback((event, value) => {
+    setPage(value);
+  }, []);
 
   const handleAddNew = () => {
     setOpen(true);
@@ -325,120 +312,102 @@ const Page = () => {
     setOpenView(true);
   };
 
-  const handleRowsPerPageChange = useCallback(
-    (event) => {
-      setRowsPerPage(event.target.value);
-    },
-    []
-  );
+  const handleRowsPerPageChange = useCallback((event) => {
+    setRowsPerPage(event.target.value);
+  }, []);
 
   const handleSubmitCreate = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const obj = {
-      first_name:  data.get('first_name'),
-      last_name: data.get('last_name'),
-      nic: data.get('nic'),
-      email: data.get('email'),
-      username: data.get('username'),
-      password: data.get('password')
-    }
-      console.log(obj);
-      
+      firstName: data.get("first_name"),
+      lastName: data.get("last_name"),
+      nic: data.get("nic"),
+      email: data.get("email"),
+      userName: data.get("username"),
+      password: data.get("password"),
+      type: data.get("type"),
+    };
+
     SDK.SysUserType.add(obj)
-    .then((res) => {
-      console.log("RES: ", res);
-      setOpen(false);
-      setSnackSeverity('success');
-      setMessage('Record Created Sucessfully!');
-      setOpenSnack(true);
-    })
-    .catch((error) => {
-      console.log("Error: ", error);
-      setOpen(false);
-      setSnackSeverity('error');
-      setMessage('Error In Record Creation!');
-      setOpenSnack(true);
-    })
+      .then((res) => {
+        setOpen(false);
+        setSnackSeverity("success");
+        setMessage("Record Created Sucessfully!");
+        setOpenSnack(true);
+      })
+      .catch((error) => {
+        setOpen(false);
+        setSnackSeverity("error");
+        setMessage("Error In Record Creation!");
+        setOpenSnack(true);
+      });
   };
 
   const handleSubmitUpdate = (values) => {
-    console.log(values)
     const obj = {
-      first_name: values.first_name,
-      last_name:  values.last_name,
-      nic:  values.nic,
+      firstName: values.firstName,
+      lastName: values.lastName,
+      nic: values.nic,
       address: values.address,
       email: values.email,
-      username: values.username,
+      userName: values.userName,
       password: values.password,
-    }
-    console.log(obj);
-    
-    cusId && SDK.SysUserType.updatePatch(cusId, obj)
-    .then((res) => {
-      console.log("RES: ", res);
-      setOpenUpdate(false);
-      setSnackSeverity('success');
-      setMessage('Record Updated Sucessfully!');
-      setOpenSnack(true);
-    })
-    .catch((error) => {
-      console.log("Error: ", error);
-      setOpenUpdate(false);
-      setSnackSeverity('error');
-      setMessage('Error In Record Update!');
-      setOpenSnack(true);
-    })
+      type: values.password,
+      isActive: true
+    };
+
+    cusId &&
+      SDK.SysUserType.update(cusId, obj)
+        .then((res) => {
+          setOpenUpdate(false);
+          setSnackSeverity("success");
+          setMessage("Record Updated Sucessfully!");
+          setOpenSnack(true);
+        })
+        .catch((error) => {
+          setOpenUpdate(false);
+          setSnackSeverity("error");
+          setMessage("Error In Record Update!");
+          setOpenSnack(true);
+        });
   };
 
   return (
     <>
       <Head>
-        <title>
-          Customers | Devias Kit
-        </title>
+        <title>Customers | Devias Kit</title>
       </Head>
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          py: 8
+          py: 8,
         }}
       >
         <Container maxWidth="xl">
           <Stack spacing={3}>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              spacing={4}
-            >
+            <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
-                <Typography variant="h4">
-                  Users
-                </Typography>
-                <Stack
-                  alignItems="center"
-                  direction="row"
-                  spacing={1}
-                >
+                <Typography variant="h4">Users</Typography>
+                <Stack alignItems="center" direction="row" spacing={1}>
                   <Button
                     color="inherit"
-                    startIcon={(
+                    startIcon={
                       <SvgIcon fontSize="small">
                         <ArrowUpOnSquareIcon />
                       </SvgIcon>
-                    )}
+                    }
                   >
                     Import
                   </Button>
                   <Button
                     color="inherit"
-                    startIcon={(
+                    startIcon={
                       <SvgIcon fontSize="small">
                         <ArrowDownOnSquareIcon />
                       </SvgIcon>
-                    )}
+                    }
                   >
                     Export
                   </Button>
@@ -446,11 +415,11 @@ const Page = () => {
               </Stack>
               <div>
                 <Button
-                  startIcon={(
+                  startIcon={
                     <SvgIcon fontSize="small">
                       <PlusIcon />
                     </SvgIcon>
-                  )}
+                  }
                   variant="contained"
                   onClick={handleAddNew}
                 >
@@ -482,13 +451,18 @@ const Page = () => {
               cusId={cusId}
             />
           </Stack>
-          <Snackbar anchorOrigin={{ vertical, horizontal }} open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack}>
-            <Alert onClose={handleCloseSnack} severity={snackSeverity} sx={{ width: '100%' }}>
+          <Snackbar
+            anchorOrigin={{ vertical, horizontal }}
+            open={openSnack}
+            autoHideDuration={6000}
+            onClose={handleCloseSnack}
+          >
+            <Alert onClose={handleCloseSnack} severity={snackSeverity} sx={{ width: "100%" }}>
               {message}
             </Alert>
           </Snackbar>
           <Backdrop
-            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
             open={openBackDrop}
             // onClick={handleCloseBackDrop}
           >
@@ -498,252 +472,279 @@ const Page = () => {
             <Dialog open={open} onClose={handleClose}>
               <DialogTitle>Add New Customer</DialogTitle>
               <Box component="form" onSubmit={handleSubmitCreate} noValidate sx={{ mt: 1 }}>
-              <DialogContent>
-                {/* <DialogContentText>
+                <DialogContent>
+                  {/* <DialogContentText>
                   To subscribe to this website, please enter your email address here. We
                   will send updates occasionally.
                 </DialogContentText> */}
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  name="username"
-                  id="username"
-                  label="User Name"
-                  fullWidth
-                  variant="standard"
-                />
-                 <TextField
-                  autoFocus
-                  margin="dense"
-                  name="password"
-                  id="password"
-                  label="Password"
-                  fullWidth
-                  variant="standard"
-                />
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  name="first_name"
-                  id="first_name"
-                  label="First Name"
-                  fullWidth
-                  variant="standard"
-                />
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  name="last_name"
-                  id="last_name"
-                  label="Last Name"
-                  fullWidth
-                  variant="standard"
-                />
-                 
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  name="nic"
-                  id="nic"
-                  label="NIC"
-                  fullWidth
-                  variant="standard"
-                />
-                
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  name="email"
-                  id="email"
-                  label="Email"
-                  fullWidth
-                  variant="standard"
-                />
-               
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={() => handleClose()}>Cancel</Button>
-                <Button type={'submit'} onSubmit={handleSubmitCreate}>Save</Button>
-              </DialogActions>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    name="username"
+                    id="username"
+                    label="User Name"
+                    fullWidth
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    name="password"
+                    id="password"
+                    label="Password"
+                    fullWidth
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    name="first_name"
+                    id="first_name"
+                    label="First Name"
+                    fullWidth
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    name="last_name"
+                    id="last_name"
+                    label="Last Name"
+                    fullWidth
+                    variant="standard"
+                  />
+
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    name="nic"
+                    id="nic"
+                    label="NIC"
+                    fullWidth
+                    variant="standard"
+                  />
+
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    name="email"
+                    id="email"
+                    label="Email"
+                    fullWidth
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    name="type"
+                    id="type"
+                    label="User Type"
+                    fullWidth
+                    variant="standard"
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => handleClose()}>Cancel</Button>
+                  <Button type={"submit"} onSubmit={handleSubmitCreate}>
+                    Save
+                  </Button>
+                </DialogActions>
               </Box>
             </Dialog>
           </div>
           <div>
             <Dialog open={openUpdate} onClose={handleCloseUpdate}>
               <DialogTitle>Update User</DialogTitle>
-              <Box component="form" onSubmit={handleSubmit(handleSubmitUpdate)} noValidate sx={{ mt: 1 }}>
-              <DialogContent>
-                {/* <DialogContentText>
+              <Box
+                component="form"
+                onSubmit={handleSubmit(handleSubmitUpdate)}
+                noValidate
+                sx={{ mt: 1 }}
+              >
+                <DialogContent>
+                  {/* <DialogContentText>
                   To subscribe to this website, please enter your email address here. We
                   will send updates occasionally.
                 </DialogContentText> */}
-                <TextField
-                {...register("username")}
-                  autoFocus
-                  margin="dense"
-                  name="username"
-                  id="username"
-                  label="User Name"
-                  fullWidth
-                  variant="standard"
-                />
-                 <TextField
-                 {...register("password")}
-                  autoFocus
-                  margin="dense"
-                  name="password"
-                  id="password"
-                  label="Password"
-                  fullWidth
-                  variant="standard"
-                />
-                <TextField
-                  {...register("first_name")}
-                  autoFocus
-                  margin="dense"
-                  name="first_name"
-                  id="first_name"
-                  label="First Name"
-                  fullWidth
-                  variant="standard"
-                />
-                <TextField
-                  {...register("last_name")}
-                  autoFocus
-                  margin="dense"
-                  name="last_name"
-                  id="last_name"
-                  label="Last Name"
-                  fullWidth
-                  variant="standard"
-                />
-                <TextField
-                  {...register("nic")}
-                  autoFocus
-                  margin="dense"
-                  name="nic"
-                  id="nic"
-                  label="NIC"
-                  fullWidth
-                  variant="standard"
-                />
-                <TextField
-                  {...register("email")}
-                  autoFocus
-                  margin="dense"
-                  name="email"
-                  id="email"
-                  label="email"
-                  fullWidth
-                  variant="standard"
-                />  
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={() => handleCloseUpdate()}>Cancel</Button>
-                <Button type={'submit'} onSubmit={handleSubmit(handleSubmitUpdate)}>Save</Button>
-              </DialogActions>
+                  <TextField
+                    {...register("userName")}
+                    autoFocus
+                    margin="dense"
+                    name="userName"
+                    id="userName"
+                    label="User Name"
+                    fullWidth
+                    variant="standard"
+                  />
+                  <TextField
+                    {...register("password")}
+                    autoFocus
+                    margin="dense"
+                    name="password"
+                    id="password"
+                    label="Password"
+                    fullWidth
+                    variant="standard"
+                  />
+                  <TextField
+                    {...register("firstName")}
+                    autoFocus
+                    margin="dense"
+                    name="firstName"
+                    id="firstName"
+                    label="First Name"
+                    fullWidth
+                    variant="standard"
+                  />
+                  <TextField
+                    {...register("lastName")}
+                    autoFocus
+                    margin="dense"
+                    name="lastName"
+                    id="lastName"
+                    label="Last Name"
+                    fullWidth
+                    variant="standard"
+                  />
+
+                  <TextField
+                    {...register("nic")}
+                    autoFocus
+                    margin="dense"
+                    name="nic"
+                    id="nic"
+                    label="NIC"
+                    fullWidth
+                    variant="standard"
+                  />
+
+                  <TextField
+                    {...register("email")}
+                    autoFocus
+                    margin="dense"
+                    name="email"
+                    id="email"
+                    label="Email"
+                    fullWidth
+                    variant="standard"
+                  />
+                  <TextField
+                    {...register("type")}
+                    autoFocus
+                    margin="dense"
+                    name="type"
+                    id="type"
+                    label="User Type"
+                    fullWidth
+                    variant="standard"
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => handleCloseUpdate()}>Cancel</Button>
+                  <Button type={"submit"} onSubmit={handleSubmit(handleSubmitUpdate)}>
+                    Save
+                  </Button>
+                </DialogActions>
               </Box>
             </Dialog>
           </div>
           <div>
             <Dialog open={openView} onClose={handleCloseView}>
               <DialogTitle>View Customer</DialogTitle>
-              <Box component="form" noValidate sx={{ mt: 1 }} width={'500px'}>
-              <DialogContent>
-                {/* <DialogContentText>
+              <Box component="form" noValidate sx={{ mt: 1 }} width={"500px"}>
+                <DialogContent>
+                  {/* <DialogContentText>
                   To subscribe to this website, please enter your email address here. We
                   will send updates occasionally.
                 </DialogContentText> */}
 
-                <Typography variant="h6" fullWidth sx={{ mb: 1 }}>
-                  Customer Id
-                </Typography>
-                <Typography variant="h7" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.id || '-'}
-                </Typography>
+                  <Typography variant="h6" fullWidth sx={{ mb: 1 }}>
+                    Customer Id
+                  </Typography>
+                  <Typography variant="h7" fullWidth px={"5px"} sx={{ mt: 2 }}>
+                    {customerData?.id || "-"}
+                  </Typography>
 
-                <Typography variant="h6" fullWidth pt={'5px'} sx={{ mt: 2, mb: 1 }}>
-                Customer First Name
-                </Typography>
-                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.first_name || '-'}
-                </Typography>
+                  <Typography variant="h6" fullWidth pt={"5px"} sx={{ mt: 2, mb: 1 }}>
+                    Customer First Name
+                  </Typography>
+                  <Typography variant="p" fullWidth px={"5px"} sx={{ mt: 2 }}>
+                    {customerData?.first_name || "-"}
+                  </Typography>
 
-                <Typography variant="h6" fullWidth py={'5px'} sx={{ mt: 2, mb: 1 }}>
-                Customer Last Name
-                </Typography>
-                <Typography variant="p" fullWidth px={'5px'} py={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.last_name || '-'}
-                </Typography>
+                  <Typography variant="h6" fullWidth py={"5px"} sx={{ mt: 2, mb: 1 }}>
+                    Customer Last Name
+                  </Typography>
+                  <Typography variant="p" fullWidth px={"5px"} py={"5px"} sx={{ mt: 2 }}>
+                    {customerData?.last_name || "-"}
+                  </Typography>
 
-                <Typography variant="h6" fullWidth py={'5px'} sx={{ mt: 2, mb: 1 }}>
-                Customer NIC
-                </Typography>
-                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.nic || '-'}
-                </Typography>
+                  <Typography variant="h6" fullWidth py={"5px"} sx={{ mt: 2, mb: 1 }}>
+                    Customer NIC
+                  </Typography>
+                  <Typography variant="p" fullWidth px={"5px"} sx={{ mt: 2 }}>
+                    {customerData?.nic || "-"}
+                  </Typography>
 
-                <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
-                Customer Phone Number
-                </Typography>
-                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.phone_number || '-'}
-                </Typography>
+                  <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
+                    Customer Phone Number
+                  </Typography>
+                  <Typography variant="p" fullWidth px={"5px"} sx={{ mt: 2 }}>
+                    {customerData?.phone_number || "-"}
+                  </Typography>
 
-                <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
-                Customer Address
-                </Typography>
-                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.address || '-'}
-                </Typography>
+                  <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
+                    Customer Address
+                  </Typography>
+                  <Typography variant="p" fullWidth px={"5px"} sx={{ mt: 2 }}>
+                    {customerData?.address || "-"}
+                  </Typography>
 
-                <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
-                Shop Name
-                </Typography>
-                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.shop_name || '-'}
-                </Typography>
+                  <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
+                    Shop Name
+                  </Typography>
+                  <Typography variant="p" fullWidth px={"5px"} sx={{ mt: 2 }}>
+                    {customerData?.shop_name || "-"}
+                  </Typography>
 
-                <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
-                Route
-                </Typography>
-                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.route || '-'}
-                </Typography>
+                  <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
+                    Route
+                  </Typography>
+                  <Typography variant="p" fullWidth px={"5px"} sx={{ mt: 2 }}>
+                    {customerData?.route || "-"}
+                  </Typography>
 
-                <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
-                Created Date
-                </Typography>
-                <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {moment(customerData?.created).format('DD-MM-YYYY') || '-'}
-                </Typography>
-
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleCloseView}>Close</Button>
-              </DialogActions>
+                  <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
+                    Created Date
+                  </Typography>
+                  <Typography variant="p" fullWidth px={"5px"} sx={{ mt: 2 }}>
+                    {moment(customerData?.created).format("DD-MM-YYYY") || "-"}
+                  </Typography>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleCloseView}>Close</Button>
+                </DialogActions>
               </Box>
             </Dialog>
           </div>
           <div>
             <Dialog open={openDelete} onClose={handleCloseDelete}>
-              <DialogTitle>Delete Customer</DialogTitle>
-              <Box component="form" noValidate sx={{ mt: 1 }} width={'500px'}>
-              <DialogContent>
-                {/* <DialogContentText>
+              <DialogTitle>Delete User</DialogTitle>
+              <Box component="form" noValidate sx={{ mt: 1 }} width={"500px"}>
+                <DialogContent>
+                  {/* <DialogContentText>
                   To subscribe to this website, please enter your email address here. We
                   will send updates occasionally.
                 </DialogContentText> */}
 
-                <Typography variant="h8" fullWidth sx={{ mb: 1 }}>
-                  Are You Sure You Want To Delete This Record? 
-                </Typography>
-
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleCloseDelete}>Close</Button>
-                <Button onClick={handleDelete}>Confirm</Button>
-              </DialogActions>
+                  <Typography variant="h8" fullWidth sx={{ mb: 1 }}>
+                    Are You Sure You Want To Delete This Record?
+                  </Typography>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleCloseDelete}>Close</Button>
+                  <Button onClick={handleDelete}>Confirm</Button>
+                </DialogActions>
               </Box>
             </Dialog>
           </div>
@@ -753,10 +754,6 @@ const Page = () => {
   );
 };
 
-Page.getLayout = (page) => (
-  <DashboardLayout>
-    {page}
-  </DashboardLayout>
-);
+Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Page;

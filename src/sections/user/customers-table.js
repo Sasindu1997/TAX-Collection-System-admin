@@ -118,15 +118,15 @@ export const CustomersTable = (props) => {
                           {getInitials(customer.name)}
                         </Avatar> */}
                         <Typography variant="subtitle2">
-                          {customer.username} 
+                          {customer.userName} 
                         </Typography>
                       </Stack>
                     </TableCell>
                     <TableCell>
-                      {customer.first_name}
+                      {customer.firstName}
                     </TableCell>
                     <TableCell>
-                      {customer.last_name}
+                      {customer.lastName}
                     </TableCell>
                     <TableCell>
                       {customer.nic}
@@ -165,7 +165,7 @@ export const CustomersTable = (props) => {
                           // )}
                           variant="text"
                           onClick={() => {
-                            setCusId(customer?.id)
+                            setCusId(customer?.uid)
                             setOpenUpdate(true)
                           }}
                         >
@@ -179,7 +179,7 @@ export const CustomersTable = (props) => {
                           // )}
                           variant="text"
                           onClick={() => {
-                            setCusId(customer?.id)
+                            setCusId(customer?.uid)
                             setOpenDelete(true)
                           }}
                         >

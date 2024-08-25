@@ -218,22 +218,22 @@ const Page = () => {
   const { register, handleSubmit, errors, reset } = useForm({
     defaultValues: {
         id: '',
-        first_name: '',
-        last_name: '',
+        firstName: '',
+        lastName: '',
         nic: '',
         address: '',
-        shop_name: '',
-        phone_number: '',
+        shopName: '',
+        phoneNumber: '',
         route: ''
     },
   });
 
   useEffect(() => {
     setOpenBackDrop(true)
-    SDK.UserType.getAll()
+    SDK.CustomerType.getAll()
     .then((res) => {
       console.log("RES: ", res);
-      setUsers(res?.data?.results);
+      setUsers(res?.data);
       setOpenBackDrop(false)
     })
     .catch((error) => {
@@ -256,7 +256,7 @@ const Page = () => {
   useEffect(() => {
     console.log("cusId: ", cusId);
     setOpenBackDrop(true)
-    cusId && SDK.UserType.getById(cusId)
+    cusId && SDK.CustomerType.getById(cusId)
     .then((res) => {
       console.log("RES: ", res);
       setCustomerData(res?.data);
@@ -293,7 +293,7 @@ const Page = () => {
   };
 
   const handleDelete = () => {
-    cusId && SDK.UserType.deletebyId(cusId)
+    cusId && SDK.CustomerType.deletebyId(cusId)
     .then((res) => {
       console.log("RES: ", res);
       setOpenDelete(false);
@@ -336,17 +336,17 @@ const Page = () => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const obj = {
-      first_name:  data.get('first_name'),
-      last_name: data.get('last_name'),
+      firstName:  data.get('firstName'),
+      lastName: data.get('lastName'),
       nic: data.get('nic'),
       address: data.get('address'),
-      shop_name: data.get('shop_name'),
-      phone_number: data.get('phone_number'),
+      shopName: data.get('shopName'),
+      phoneNumber: data.get('phoneNumber'),
       route: data.get('route')
     }
       console.log(obj);
       
-    SDK.UserType.add(obj)
+    SDK.CustomerType.add(obj)
     .then((res) => {
       console.log("RES: ", res);
       setOpen(false);
@@ -366,17 +366,17 @@ const Page = () => {
   const handleSubmitUpdate = (values) => {
     console.log(values)
     const obj = {
-      first_name: values.first_name,
-      last_name:  values.last_name,
+      firstName: values.firstName,
+      lastName:  values.lastName,
       nic:  values.nic,
       address: values.address,
-      shop_name: values.shop_name,
-      phone_number: values.phone_number,
+      shopName: values.shopName,
+      phoneNumber: values.phoneNumber,
       route: values.route,
     }
     console.log(obj);
     
-    cusId && SDK.UserType.updatePatch(cusId, obj)
+    cusId && SDK.CustomerType.updatePatch(cusId, obj)
     .then((res) => {
       console.log("RES: ", res);
       setOpenUpdate(false);
@@ -507,8 +507,8 @@ const Page = () => {
                 <TextField
                   autoFocus
                   margin="dense"
-                  name="first_name"
-                  id="first_name"
+                  name="firstName"
+                  id="firstName"
                   label="First Name"
                   fullWidth
                   variant="standard"
@@ -516,8 +516,8 @@ const Page = () => {
                 <TextField
                   autoFocus
                   margin="dense"
-                  name="last_name"
-                  id="last_name"
+                  name="lastName"
+                  id="lastName"
                   label="Last Name"
                   fullWidth
                   variant="standard"
@@ -534,9 +534,9 @@ const Page = () => {
                 <TextField
                   autoFocus
                   margin="dense"
-                  name="phone_number"
-                  id="phone_number"
-                  label="phone_number"
+                  name="phoneNumber"
+                  id="phoneNumber"
+                  label="phoneNumber"
                   fullWidth
                   type='number'
                   variant="standard"
@@ -544,8 +544,8 @@ const Page = () => {
                  <TextField
                   autoFocus
                   margin="dense"
-                  name="shop_name"
-                  id="shop_name"
+                  name="shopName"
+                  id="shopName"
                   label="Shop Name"
                   fullWidth
                   variant="standard"
@@ -586,21 +586,21 @@ const Page = () => {
                   will send updates occasionally.
                 </DialogContentText> */}
                 <TextField
-                  {...register("first_name")}
+                  {...register("firstName")}
                   autoFocus
                   margin="dense"
-                  name="first_name"
-                  id="first_name"
+                  name="firstName"
+                  id="firstName"
                   label="First Name"
                   fullWidth
                   variant="standard"
                 />
                 <TextField
-                  {...register("last_name")}
+                  {...register("lastName")}
                   autoFocus
                   margin="dense"
-                  name="last_name"
-                  id="last_name"
+                  name="lastName"
+                  id="lastName"
                   label="Last Name"
                   fullWidth
                   variant="standard"
@@ -616,22 +616,21 @@ const Page = () => {
                   variant="standard"
                 />
                 <TextField
-                  {...register("phone_number")}
+                  {...register("phoneNumber")}
                   autoFocus
                   margin="dense"
-                  name="phone_number"
-                  id="phone_number"
-                  label="phone_number"
-                  type='number'
+                  name="phoneNumber"
+                  id="phoneNumber"
+                  label="phoneNumber"
                   fullWidth
                   variant="standard"
                 />  
                  <TextField
-                 {...register("shop_name")}
+                 {...register("shopName")}
                   autoFocus
                   margin="dense"
-                  name="shop_name"
-                  id="shop_name"
+                  name="shopName"
+                  id="shopName"
                   label="Shop Name"
                   fullWidth
                   variant="standard"
@@ -678,21 +677,21 @@ const Page = () => {
                   Customer Id
                 </Typography>
                 <Typography variant="h7" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.id || '-'}
+                  {customerData?.cid || '-'}
                 </Typography>
 
                 <Typography variant="h6" fullWidth pt={'5px'} sx={{ mt: 2, mb: 1 }}>
                 Customer First Name
                 </Typography>
                 <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.first_name || '-'}
+                  {customerData?.firstName || '-'}
                 </Typography>
 
                 <Typography variant="h6" fullWidth py={'5px'} sx={{ mt: 2, mb: 1 }}>
                 Customer Last Name
                 </Typography>
                 <Typography variant="p" fullWidth px={'5px'} py={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.last_name || '-'}
+                  {customerData?.lastName || '-'}
                 </Typography>
 
                 <Typography variant="h6" fullWidth py={'5px'} sx={{ mt: 2, mb: 1 }}>
@@ -706,7 +705,7 @@ const Page = () => {
                 Customer Phone Number
                 </Typography>
                 <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.phone_number || '-'}
+                  {customerData?.phoneNumber || '-'}
                 </Typography>
 
                 <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>
@@ -720,7 +719,7 @@ const Page = () => {
                 Shop Name
                 </Typography>
                 <Typography variant="p" fullWidth px={'5px'} sx={{ mt: 2 }}>
-                  {customerData?.shop_name || '-'}
+                  {customerData?.shopName || '-'}
                 </Typography>
 
                 <Typography variant="h6" fullWidth sx={{ mt: 2, mb: 1 }}>

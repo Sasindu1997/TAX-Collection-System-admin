@@ -1,20 +1,14 @@
 import axios from "axios";
 import { BASE_URL } from '../../config.env'
-var ls = require('local-storage');
-
-const extendedUrl = `${BASE_URL}/api/v1`;
-
-// let token = ls.get('apiKey');
-let token = "5b2bba40ef2844949a3dbe98d14c43c7ee04faed"
-
+const extendedUrl = `${BASE_URL}/api`;
 const apiHeaders = {
-    'Authorization': `Token ${token}`,
-    'Accept'       : 'application/json'
+    // 'Authorization': `Token ${token}`,
+    // 'Accept'       : 'application/json'
 }
 
 const add = async(req) => {
     console.log(req);
-    const data =  axios.post(extendedUrl + "/loan-groups/", req, {
+    const data =  axios.post(extendedUrl + "/group/", req, {
         headers: apiHeaders
       }
     );
@@ -23,7 +17,7 @@ const add = async(req) => {
 };
 
 const getAll = async() => {
-    const data = await axios.get(extendedUrl + "/loan-groups/?page=1", {
+    const data = await axios.get(extendedUrl + "/group", {
         headers: apiHeaders
     });
     console.log("getall", data);
@@ -31,7 +25,7 @@ const getAll = async() => {
 };
 
 const getById = async(id) => {
-    const data = await axios.get(extendedUrl + `/loan-groups/${id}/`, {
+    const data = await axios.get(extendedUrl + `/group/${id}/`, {
         headers: apiHeaders
     });
     console.log(data);
@@ -39,7 +33,7 @@ const getById = async(id) => {
 };
 
 const update = async(id, req) => {
-    const data = await axios.put(extendedUrl + `/loan-groups/${id}/`, req, {
+    const data = await axios.put(extendedUrl + `/group/${id}/`, req, {
         headers: apiHeaders,
     });
     console.log(data);
@@ -47,7 +41,7 @@ const update = async(id, req) => {
 };
 
 const updatePatch = async(id, req) => {
-    const data = await axios.patch(extendedUrl + `/loan-groups/${id}/`,  req,{
+    const data = await axios.patch(extendedUrl + `/group/${id}/`,  req,{
         headers: apiHeaders,
     });
     console.log(data);
@@ -55,7 +49,7 @@ const updatePatch = async(id, req) => {
 };
 
 const deletebyId = async(id) => {
-    const data = await axios.delete(extendedUrl + `/loan-groups/${id}/`, {
+    const data = await axios.delete(extendedUrl + `/group/${id}/`, {
         headers: apiHeaders
     });
     console.log(data);

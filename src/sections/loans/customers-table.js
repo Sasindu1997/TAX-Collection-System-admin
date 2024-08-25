@@ -116,18 +116,18 @@ export const CustomersTable = (props) => {
                           {getInitials(customer.name)}
                         </Avatar> */}
                         <Typography variant="subtitle2">
-                          {customer.id} 
+                          {customer.lid} 
                         </Typography>
                       </Stack>
                       </TableCell>
                       <TableCell>
-                        {customer.customer.first_name}
+                        {/* {customer.amount} */}
                       </TableCell>
                       <TableCell>
                         {customer.amount}
                       </TableCell>
                       <TableCell>
-                        {customer.installment}
+                        {customer.dailyRental}
                       </TableCell>
                       <TableCell>
                         {customer.payment_period}
@@ -136,7 +136,7 @@ export const CustomersTable = (props) => {
                         {customer.payable_amount}
                       </TableCell>
                       <TableCell>
-                        {customer.arrears}
+                        {customer.arreas}
                       </TableCell>
                       <TableCell >
                         {customer.status}

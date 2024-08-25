@@ -43,8 +43,8 @@ const Page = () => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        await auth.signIn(values.email, values.password);
-        // router.push('/');
+        // await auth.signIn(values.email, values.password);
+        router.push('/');
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
